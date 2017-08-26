@@ -14,14 +14,14 @@ import com.microsoft.azure.management.resources.fluentcore.arm.ResourceId;
 import com.microsoft.azure.management.resources.fluentcore.model.implementation.WrapperImpl;
 import com.microsoft.azure.management.sql.AuditingPolicy;
 
+import rx.Observable;
+
 /**
  * Implementation for Azure SQL Database's service tier advisor.
  */
 @LangDefinition
-class AuditingPolicyImpl
-        extends WrapperImpl<AuditingPolicyInner>
-        implements AuditingPolicy {
-	
+class AuditingPolicyImpl extends WrapperImpl<AuditingPolicyInner> implements AuditingPolicy {
+
     private final ResourceId resourceId;
     private final DatabasesInner databasesInner;
     private final ServersInner serversInner;
@@ -51,23 +51,20 @@ class AuditingPolicyImpl
     }
 
     @Override
-    public boolean isValid()
-    {
-    	return this.id()!=null;
-    }
-	
-    @Override
-    public boolean isActive()
-    {
-    	return this.auditingState()!=null && "Enabled".equals(this.auditingState());
+    public boolean isValid() {
+        return this.id() != null;
     }
 
     @Override
-    public boolean isUseServerDefault()
-    {
-    	return this.useServerDefault()!=null && "Enabled".equals(this.useServerDefault());
+    public boolean isActive() {
+        return this.auditingState() != null && "Enabled".equals(this.auditingState());
     }
-    
+
+    @Override
+    public boolean isUseServerDefault() {
+        return this.useServerDefault() != null && "Enabled".equals(this.useServerDefault());
+    }
+
     @Override
     public String policyType() {
         return this.inner().type();
@@ -93,85 +90,79 @@ class AuditingPolicyImpl
         return this.resourceId.parent().name();
     }
 
-	@Override
-	public String auditingState()
-	{
-		return this.inner().auditingState();
-	}
+    @Override
+    public String auditingState() {
+        return this.inner().auditingState();
+    }
 
-	@Override
-	public List<String> eventTypesToAudit()
-	{
-		return this.inner().eventTypesToAudit();
-	}
+    @Override
+    public List<String> eventTypesToAudit() {
+        return this.inner().eventTypesToAudit();
+    }
 
-	@Override
-	public String auditLogsTableName()
-	{
-		return this.inner().auditLogsTableName();
-	}
+    @Override
+    public String auditLogsTableName() {
+        return this.inner().auditLogsTableName();
+    }
 
-	@Override
-	public String retentionDays()
-	{
-		return this.inner().retentionDays();
-	}
+    @Override
+    public String retentionDays() {
+        return this.inner().retentionDays();
+    }
 
-	@Override
-	public String storageAccountName()
-	{
-		return this.inner().storageAccountName();
-	}
+    @Override
+    public String storageAccountName() {
+        return this.inner().storageAccountName();
+    }
 
-	@Override
-	public String storageAccountKey()
-	{
-		return this.inner().storageAccountKey();
-	}
+    @Override
+    public String storageAccountKey() {
+        return this.inner().storageAccountKey();
+    }
 
-	@Override
-	public String secondaryStorageAccountKey()
-	{
-		return this.inner().secondaryStorageAccountKey();
-	}
+    @Override
+    public String secondaryStorageAccountKey() {
+        return this.inner().secondaryStorageAccountKey();
+    }
 
-	@Override
-	public String storageTableEndpoint()
-	{
-		return this.inner().storageTableEndpoint();
-	}
+    @Override
+    public String storageTableEndpoint() {
+        return this.inner().storageTableEndpoint();
+    }
 
-	@Override
-	public String storageAccountResourceGroupName()
-	{
-		return this.inner().storageAccountResourceGroupName();
-	}
+    @Override
+    public String storageAccountResourceGroupName() {
+        return this.inner().storageAccountResourceGroupName();
+    }
 
-	@Override
-	public UUID storageAccountSubscriptionId()
-	{
-		return this.inner().storageAccountSubscriptionId();
-	}
+    @Override
+    public UUID storageAccountSubscriptionId() {
+        return this.inner().storageAccountSubscriptionId();
+    }
 
-	@Override
-	public String storageAccountType()
-	{
-		return this.inner().storageAccountType();
-	}
+    @Override
+    public String storageAccountType() {
+        return this.inner().storageAccountType();
+    }
 
-	@Override
-	public String useServerDefault()
-	{
-		return this.inner().useServerDefault();
-	}
+    @Override
+    public String useServerDefault() {
+        return this.inner().useServerDefault();
+    }
 
-	@Override
+    @Override
     public AuditingPolicy refresh() {
-        //sloUsageMetrics = null;
-		if (serversInner!=null)
-			this.setInner(this.serversInner.getAuditingPolicy(this.resourceGroupName(), this.sqlServerName()));
-		else
-			this.setInner(this.databasesInner.getAuditingPolicy(this.resourceGroupName(), this.sqlServerName(), this.databaseName()));
+        // sloUsageMetrics = null;
+        if (serversInner != null)
+            this.setInner(this.serversInner.getAuditingPolicy(this.resourceGroupName(), this.sqlServerName()));
+        else
+            this.setInner(this.databasesInner.getAuditingPolicy(this.resourceGroupName(), this.sqlServerName(), this.databaseName()));
         return this;
+    }
+
+    @Override
+    public Observable<AuditingPolicy> refreshAsync() {
+        // TODO
+        return null;
     }
 }
